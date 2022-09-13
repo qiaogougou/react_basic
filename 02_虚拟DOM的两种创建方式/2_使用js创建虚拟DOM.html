@@ -18,10 +18,10 @@
 
 
     <script type="text/javascript">
-        // 创建实际DOM：document.createElement()  
+        // JS创建实际DOM：document.createElement()  
 
-        // 1. 创建虚拟DOM   React.createElement(标签名，标签属性，标签内容)
-        const vDom = React.createElement(标签名， 标签属性)
+        // 1. React创建虚拟DOM   React.createElement(标签名，标签属性，标签内容)
+        const vDom = React.createElement('h1', {id: 'title'}, React.createElement('span',{}, 'Hello React'))
 
         // 2. 渲染虚拟DOM 到页面
         ReactDOM.render(vDom, document.getElementById('test'))
