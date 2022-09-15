@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        class Person {
+            constructor(name, age) {
+                this.name = name
+                this.age = age
+            } 
+            
+            speak(){
+                console.log(this) // 通过Person实例调用，this就是Person实例 
+            }
+        }
+
+        const p1 = new Person('Tom', 18)
+        p1.speak() // 通过实例调用speak
+
+        const x = p1.speak // 赋值语句
+        x() // 直接调用，没有通过实例调用，所以找不到this
+        /*** 类中定义的方法都开启了严格模式 'use strict' ***/
+
+
+        function demo(){
+            console.log(this) // window
+        }
+        demo()
+        const y = demo.bind({a:1, b:2})
+        y()
+
+        function demo2(){
+            'use strict' // 函数中开启 严格模式
+            console.log(this) // undefined
+        }
+        demo2()
+
+    </script>
+
+</body>
+
+</html>
