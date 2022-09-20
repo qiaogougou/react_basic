@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4_函数式组件使用props</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <!-- 引入 prop-types, 用于限制组件属性 -->
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        function Person(props) {
+            const {name, age, sex} = props
+            return (
+                <ul>
+                    <li>name:{name}</li>
+                    <li>age:{age+1}</li>
+                    <li>sex:{sex}</li>
+                </ul>
+            )
+        }
+        // 限制标签属性  ---给函数本身加属性
+        Person.propTypes = {
+            name: PropTypes.string.isRequired, // 必传
+            sex: PropTypes.string,
+            age: PropTypes.number,
+            speak: PropTypes.func  // function
+        }
+        // 指定标签属性的默认值  ---给函数本身加属性
+        Person.defaultProps = {
+            sex: 'Female',
+            age: 18
+        }
+        
+        ReactDOM.render(<Person name='Tom' age={18} sex='Male' speak={speak}/>, document.getElementById('test'))
+
+        function speak(){
+            console.log("speak")
+        }
+    </script>
+</body>
+
+</html>

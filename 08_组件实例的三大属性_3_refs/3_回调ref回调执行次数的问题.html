@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3_回调ref回调执行次数的问题</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <!-- 引入 prop-types, 用于限制组件属性 -->
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        class Demo extends React.Component {
+            state = {isHot: false}
+            showInfo = () => {
+                console.log(this)
+                const {input1} = this
+                alert(input1.value)
+            }
+
+            saveInput = (c) => {
+                this.input1 = c; 
+                console.log("@", c)
+            }
+
+            changeWeather = () => {
+                const {isHot} = this.state
+                return this.setState({isHot: !isHot})
+            }
+           
+            // 回调形式的ref
+            render(){
+                const {isHot} = this.state
+                return (
+                    <div>
+                        <h2>今天天气很 {isHot?'炎热':'凉爽'}</h2>
+                        
+                        {/* 内联函数形式的写法 （开发常用这种形式）
+                            在更新组件时会执行两次，第一次为null 目的为清空信息，第二次再进行渲染
+                        <input ref={(c) => {this.input1 = c; console.log("@", c)}} type="text"/>&nbsp; 
+                        */}
+                        {/* class绑定函数的写法 */}
+                        <input ref={this.saveInput} type="text"/>
+                        <br/><br/>
+                        <button onClick={this.showInfo}>点击提示输入数据</button>&nbsp;
+                        <button onClick={this.changeWeather}>点击切换天气</button>
+                    </div>
+                ) 
+            }
+        }
+        
+        ReactDOM.render(<Demo/>, document.getElementById('test'))
+    </script>
+</body>
+
+</html>

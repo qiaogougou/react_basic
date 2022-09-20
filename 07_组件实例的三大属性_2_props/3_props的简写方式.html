@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3_props的简写方式</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+    <div id="test1"></div>
+    <div id="test2"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <!-- 引入 prop-types, 用于限制组件属性 -->
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        // 创建类式组件
+        class Person extends React.Component {
+            // 类中的构造器能省略则省略
+            constructor(props){
+                // 构造器是否接受props，是否传递给props，取决于： 是否希望在构造器中通过 this 访问 props
+                console.log(props)
+                super(props)
+                console.log(this.props) // 其实可以不使用this.props, 直接用传入的props参数
+            }
+
+            // 限制标签属性  ---给类本身加属性
+            static propTypes = {
+                name: PropTypes.string.isRequired, // 必传
+                sex: PropTypes.string,
+                age: PropTypes.number,
+                speak: PropTypes.func  // function
+            }
+            // 指定标签属性的默认值  ---给类本身加属性
+            static defaultProps = {
+                sex: 'Female',
+                age: 18
+            }
+            // 初始化状态
+            state = {}
+
+            render(){
+                // console.log(this)
+                const {name, age, sex} = this.props
+                // props 属性是只读的，不可以修改
+                // this.props.name = 'jeck' // 报错，不可以直接修改属性内容
+                return (
+                    <ul>
+                        <li>name:{name}</li>
+                        <li>age:{age+1}</li>
+                        <li>sex:{sex}</li>
+                    </ul>
+                )
+            }
+        }
+
+        // 每个组件对象都会有 props 属性
+        // 组件标签的所有属性会保存在 Props 中 {key: value}
+        ReactDOM.render(<Person name='Tom' age={18} sex='Male' speak={speak}/>, document.getElementById('test'))
+        ReactDOM.render(<Person name='Kate' age={30} />, document.getElementById('test1'))
+
+        const p = {name: 'Dan', age: 20, sex: 'Female'}
+        // ReactDOM.render(<Person name={p.name} age={p.age} sex={p.sex}/>, document.getElementById('test2'))
+        ReactDOM.render(<Person {...p}/>, document.getElementById('test2'))  
+        
+        function speak(){
+            console.log("speak")
+        }
+    </script>
+</body>
+
+</html>
