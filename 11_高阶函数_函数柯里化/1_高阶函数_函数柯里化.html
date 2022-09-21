@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高阶函数_函数柯里化</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <!-- 引入 prop-types, 用于限制组件属性 -->
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+        //#region  ---用于代码折叠
+            /*
+                高阶函数：如果一个函数符合下面两个规范中的一个，那该函数就是高阶函数
+                    1. 若A函数，接收的参数是一个函数，那A函数就是高阶函数
+                    2. 若A函数，调用的返回值依然是一个函数，那A函数就是高阶函数
+                    常见的高阶函数有：Promise, setTimeout, arr.map() 等等
+                
+                函数的柯里化：通过函数调用继续返回函数的方式，实现多次接受参数最后统一处理的函数编码形式。
+                    function sum(a) {
+                        return (b) => {
+                            return (c) => {
+                                return a + b + c
+                            }
+                        }
+                    }
+            */
+        //#endregion
+        
+        // 创建组件
+        class Login extends React.Component {
+            state = {
+                username: '',
+                password: ''
+            }
+            // 保存表单数据到state
+            saveFormData = (dataType) => {
+                return (event) => { 
+                    // 因为closure，return出去的function会记住dataType的值
+                    this.setState({[dataType]: event.target.value})
+                }
+            }
+           
+            handleSubmit = (event) => {
+                event.preventDefault() // 阻止表单提交，form 标签会默认提交表单，所以要用阻止表单事件
+                const {username, password} = this.state
+                alert(`提交的用户名：${username}  密码：${password}`)
+            }
+
+            render(){
+                // 这种写法是onChange赋值为this.saveFormData('username')函数的返回值，
+                // 然后React将event传入到返回的函数中
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        <input onChange={this.saveFormData('username')} type="text" name="username" />    
+                        <input onChange={this.saveFormData('password')} type="password" name="password" />    
+                        <button>登录</button>
+                    </form>
+                )
+
+                
+                /*
+                    // 这种写法是onChange赋值为this.saveFormData函数，
+                    // 然后React将event传入到saveFormData函数中
+                    // 在saveFormData函数中，可以用event.target.name 和 event.target.name 接收数据
+                        saveFormData = (event) => {
+                            this.setState({[event.target.name]: event.target.value})
+                        }
+                return (
+                    <form onSubmit={this.handleSubmit}>
+                        <input onChange={this.saveFormData} type="text" name="username" />    
+                        <input onChange={this.saveFormData} type="password" name="password" />    
+                        <button>登录</button>
+                    </form>
+                )
+                */
+            }
+        }
+        ReactDOM.render(<Login/>, document.getElementById('test'))
+    </script>
+</body>
+
+</html>

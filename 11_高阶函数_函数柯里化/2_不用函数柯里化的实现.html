@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1_非受控组件</title>
+    <title>高阶函数_函数柯里化</title>
 </head>
 
 <body>
@@ -17,29 +17,36 @@
     <script type="text/javascript" src="../js/react-dom.development.js"></script>
     <!-- 引入 Babel，用于将 jsx 转换为 js -->
     <script type="text/javascript" src="../js/babel.min.js"></script>
-    <!-- 引入 prop-types, 用于限制组件属性 -->
-    <script type="text/javascript" src="../js/prop-types.js"></script>
-
+    
     <script type="text/babel">
-        /*
-            非受控组件，form中的数据是现用现取，则为非受控组件
-        */
         // 创建组件
         class Login extends React.Component {
+            state = {
+                username: '',
+                password: ''
+            }
+            // 保存表单数据到state
+            saveFormData = (dataType, event) => {
+                this.setState({[dataType]: event.target.value})
+            }
+
             handleSubmit = (event) => {
                 event.preventDefault() // 阻止表单提交，form 标签会默认提交表单，所以要用阻止表单事件
-                const {username, password} = this
-                alert(`提交的用户名：${username.value}，密码：${password.value}`)
+                const {username, password} = this.state
+                alert(`提交的用户名：${username}  密码：${password}`)
             }
 
             render(){
+                // 这种写法是onChange赋值为this.saveFormData('username')函数的返回值，
+                // 然后React将event传入到返回的函数中
                 return (
                     <form onSubmit={this.handleSubmit}>
-                        <input ref={c => this.username = c} type="text" name="username" />    
-                        <input ref={c => this.password = c} type="password" name="password" />    
+                        <input onChange={event => this.saveFormData('username', event)} type="text" name="username" />    
+                        <input onChange={event => this.saveFormData('password', event)} type="password" name="password" />    
                         <button>登录</button>
                     </form>
                 )
+
             }
         }
         ReactDOM.render(<Login/>, document.getElementById('test'))
