@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3_react生命周期(新)</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/17.0.1/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/17.0.1/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/17.0.1/babel.min.js"></script>
+
+    <script type="text/babel">
+        /*
+            1. 初始化阶段：由ReactDOM.render()触发 -----初次渲染
+                    1. constructor()
+                    2. getDerivedStateFromProps
+                    3. render()
+                    4. componentDidMount() =====> 常用
+                        一般在这个钩子中做一些初始化的事，例如：开启定时器，发送网络请求，订阅消息
+            
+            2. 更新阶段：由组件内部 this.setState() 或父组件重新 render 触发
+                    1. getDerivedStateFromProps
+                    2. shouldComponentUpdate()
+                    3. render()
+                    4. getSnapshotBeforeUpdate
+                    5. componentDidUpdate()
+            
+            3. 卸载组件：由ReactDOM.unmountComponentAtNode() 触发
+                    1. componentWillUnmount() =====> 常用
+                        一般在这个钩子中做一些收尾的事，例如：关闭定时器，取消订阅消息
+        */
+
+
+        // 创建Count组件
+        class Count extends React.Component {
+            // 初始化状态
+            // state = {count: 0}
+
+            constructor(props){
+                console.log("=========constructor=========")
+                super(props)
+                this.state = {count: 0}
+            }
+
+            // 加1按钮的回调
+            count = () => {
+                // 获取state
+                const {count} = this.state
+                // 修改state
+                this.setState({count: count+1})
+            }
+
+            // 卸载组件按钮的回调
+            death = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+            }
+            
+            // 组件强制刷新的回调
+            force = () => {
+                this.forceUpdate()
+            }
+
+
+            // 新生命周期//////////////
+            // 使用概率很低：若 state 的值在任何时候都取决于props，可以使用此方法但会造成代码冗余
+            //（替代方法：在构造器中定义props）
+            static getDerivedStateFromProps(props, state){
+                console.log("=========getDerivedStateFromProps=========", props, state)
+                // 可在此对 props和state的值做业务逻辑判断。。。
+                props= {count:100};
+                // return props;
+                return null;
+            }
+
+            // 组件挂载完毕（常用：为组件做初始化工作）
+            componentDidMount(){
+                console.log("=========componentDidMount=========")
+            }
+
+            // 控制组件更新的阀门
+            // 修改状态之前调用，有返回值，返回true：允许修改状态；返回false：不允许修改状态
+            shouldComponentUpdate(){
+                console.log("=========shouldComponentUpdate=========")
+                return true;
+            }
+
+            // 新生命周期//////////////
+            // 任何值都可以是返回值，返回值传递给 componentDidUpdate
+            getSnapshotBeforeUpdate(previousProp, previousState){
+                console.log("=========getSnapshotBeforeUpdate=========",previousProp, previousState)
+                return {"sdsd":11};
+            }
+
+            // 组件更新完毕
+            componentDidUpdate(previousProp, previousState, snapshotValue){
+                console.log("=========componentDidUpdate=========", previousProp, previousState, snapshotValue)
+            }
+
+            // 组件将要卸载（常用：为组件做收尾工作）
+            componentWillUnmount(){
+                console.log("=========componentWillUnmount=========")
+            }
+
+            render(){
+                console.log("=========render=========")
+                return (
+                    <div>
+                        <h2>点击加一 ： {this.state.count}</h2>
+                        <button onClick={this.count}>点击+1</button>&nbsp;
+                        <button onClick={this.death}>卸载组件</button>&nbsp;
+                        <button onClick={this.force}>不修改状态的情况下，强制更新组件</button>
+                    </div>
+                )
+            }
+        }
+        
+        // 渲染组件 mount
+        ReactDOM.render(<Count count={199}/>, document.getElementById('test'))
+    </script>
+</body>
+
+</html>

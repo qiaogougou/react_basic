@@ -42,16 +42,19 @@
             // 初始化状态
             state = {count: 0}
 
+            // 加1按钮的回调
             count = () => {
                 // 获取state
                 const {count} = this.state
                 // 修改state
                 this.setState({count: count+1})
             }
+
             // 卸载组件按钮的回调
             death = () => {
                 ReactDOM.unmountComponentAtNode(document.getElementById('test'))
             }
+            
             // 组件强制刷新的回调
             force = () => {
                 this.forceUpdate()
@@ -61,25 +64,29 @@
             componentWillMount(){
                 console.log("=========componentWillMount=========")
             }
+            
             // 组件挂载完毕（常用：为组件做初始化工作）
             componentDidMount(){
                 console.log("=========componentDidMount=========")
             }
 
-            // 修改状态之前调用，有返回值
-            // 返回true：允许修改状态；返回false：不允许修改状态
+            // 控制组件更新的阀门
+            // 修改状态之前调用，有返回值，返回true：允许修改状态；返回false：不允许修改状态
             shouldComponentUpdate(){
                 console.log("=========shouldComponentUpdate=========")
                 return true;
             }
+
             // 组件将要更新
             componentWillUpdate(){
                 console.log("=========componentWillUpdate=========")
             }
+
             // 组件更新完毕
             componentDidUpdate(){
                 console.log("=========componentDidUpdate=========")
             }
+
             // 组件将要卸载（常用：为组件做收尾工作）
             componentWillUnmount(){
                 console.log("=========componentWillUnmount=========")
@@ -119,7 +126,8 @@
 
         class B extends React.Component {
             
-            // B组件将要接受新的Props，加载的第一次不调用，第二次更新才开始调用 componentWillReceiveNewProps
+            // B组件将要接受新的Props，componentWillReceiveNewProps
+            // 加载的第一次不调用，第二次更新才开始调用 
             componentWillReceiveProps(props){
                 console.log(props)
                 console.log("B ===> componentWillReciveProps")

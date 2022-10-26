@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1_验证Diffing算法</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/17.0.1/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/17.0.1/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/17.0.1/babel.min.js"></script>
+
+    <script type="text/babel">
+        /*
+            Diffing 算法是react中用来对比dom的算法，当状态有更改的时候，
+            react会重新比较并渲染更新的组件，对比新旧标签是否一致，不一致的时候再进行更新，
+            对比的最小粒度是标签，会对标签进行逐层对比
+        */
+        class Time extends React.Component {
+            state = {date: new Date()}
+
+            componentDidMount(){
+                setInterval(()=>{
+                    this.setState({
+                        date: new Date()
+                    })
+                }, 1000)
+            }
+
+            render(){
+                return (
+                    <div>
+                        <h1>hello</h1>
+                        <input type="text"/>
+                        <span>
+                            现在是：{this.state.date.toTimeString()}
+                            <input type="text"/>
+                        </span>
+                    </div>
+                )
+            }
+        }
+
+        // 渲染组件 mount
+        ReactDOM.render(<Time/>, document.getElementById('test'))
+    </script>
+</body>
+
+</html>

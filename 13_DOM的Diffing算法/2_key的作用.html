@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2_key的作用</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+
+    <!-- 引入 react 核心库 -->
+    <script type="text/javascript" src="../js/17.0.1/react.development.js"></script>
+    <!-- 引入 react-dom， 用于支持 react 操作 DOM -->
+    <script type="text/javascript" src="../js/17.0.1/react-dom.development.js"></script>
+    <!-- 引入 Babel，用于将 jsx 转换为 js -->
+    <script type="text/javascript" src="../js/17.0.1/babel.min.js"></script>
+
+    <script type="text/babel">
+        /*
+            1. 初始化阶段：由ReactDOM.render()触发 -----初次渲染
+                    1. constructor()
+                    2. getDerivedStateFromProps
+                    3. render()
+                    4. componentDidMount() =====> 常用
+                        一般在这个钩子中做一些初始化的事，例如：开启定时器，发送网络请求，订阅消息
+            
+            2. 更新阶段：由组件内部 this.setState() 或父组件重新 render 触发
+                    1. getDerivedStateFromProps
+                    2. shouldComponentUpdate()
+                    3. render()
+                    4. getSnapshotBeforeUpdate
+                    5. componentDidUpdate()
+            
+            3. 卸载组件：由ReactDOM.unmountComponentAtNode() 触发
+                    1. componentWillUnmount() =====> 常用
+                        一般在这个钩子中做一些收尾的事，例如：关闭定时器，取消订阅消息
+        */
+
+        class Person extends React.Component{
+            state = {
+                persons: [
+                    {id: 1, name: '小张', age: 18},
+                    {id: 2, name: '小李', age: 19}
+                ]
+            }
+            
+            add = ()=>{
+                const {persons} = this.state 
+                const p = {id: persons.length+1, name: '小王', age: 20}
+                this.setState({persons:[p, ...persons]})
+            }
+
+            render(){
+                return (
+                    <div>
+                        <h2>展示人员信息</h2>
+                        <button onClick={this.add}>添加一个小王</button>
+                        <ul>
+                            {
+                                this.state.persons.map((obj, index)=>{
+                                    /* 
+                                        用index作为key会引发效率问题，因为react会对比dom，
+                                        如果新数据的加入不在最后（打乱了原有的顺序），
+                                        diffing算法比较标签时，无法重用现有的已渲染的标签（因为key被改变了），需要重新渲染
+                                        key 本质是给虚拟dom编号，再次渲染时根据编号做对比。
+
+                                        
+                                    */
+                                    return <li key={index}>{obj.name} ---{obj.age}</li>
+                                })
+                            }
+                        </ul>
+                    </div>
+                )
+            }
+
+        }
+        
+        // 渲染组件 mount
+        ReactDOM.render(<Person/>, document.getElementById('test'))
+    </script>
+</body>
+
+</html>
